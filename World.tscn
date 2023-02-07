@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="PlaneMesh" id=1]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 1, 2.13451, 1.02287 )
+
+[node name="World" type="Spatial"]
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.997697, 0.042376, -0.0529684, -0.0102216, 0.865862, 0.500179, 0.0670589, -0.498486, 0.8643, -3.29078, 8.11421, 9.12693 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 20, 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 0 )
+mesh = SubResource( 1 )
+
+[node name="KinematicBody" type="KinematicBody" parent="MeshInstance"]
+
+[node name="CollisionShape" type="CollisionShape" parent="MeshInstance/KinematicBody"]
+transform = Transform( 1, 0, 0, 0, 0.0552477, 0, 0, 0, 1, -0.000105572, -0.145859, -0.00366563 )
+shape = SubResource( 2 )
