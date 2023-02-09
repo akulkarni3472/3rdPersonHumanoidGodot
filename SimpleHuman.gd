@@ -29,7 +29,6 @@ func _process(delta):
 	spring_arm.translation = translation
 
 func move():
-	animation_player.play("run_loop")
 	var move_dir = Vector3.ZERO
 	move_dir.x = Input.get_action_strength("right") - Input.get_action_raw_strength("left")
 	move_dir.z = Input.get_action_strength("back") - Input.get_action_raw_strength("forward")
@@ -39,8 +38,13 @@ func move():
 	if move_dir.z != 0 or move_dir.x != 0:
 		model.rotation.y = lerp_angle(model.rotation.y, atan2(velocity.x, velocity.z), lerp_val)
 		moving = true
+	else:
+		moving = false
+		
 	if moving:
-		model.rotation.x = lerp_angle(model.rotation.x, -forward_tilt, lerp_val)
+		animation_player.play("run_loop")
+	else:
+		animation_player.play("idle_loop")
 
 func apply_gravity(delta):
 	velocity.y -= delta * gravity
