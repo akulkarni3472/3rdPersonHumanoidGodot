@@ -7,13 +7,13 @@ export var jump_force = 8.0
 export var gravity = 9.8
 export var grab_rotate_speed = 0.1
 
-var moving = false
 var velocity = Vector3.ZERO
 var snap_vector = Vector3.DOWN
 
 onready var spring_arm= $SpringArmPivot/SpringArm
 onready var model = $Armature/Skeleton/Cube
 onready var animation_player = $AnimationPlayer
+onready var animation_tree = $AnimationTree
 # onready var grab_cast = $MeshInstance/GrabPos
 # onready var hold_pos = $MeshInstance/GrabPos/HoldPos
 
@@ -33,18 +33,14 @@ func move():
 	move_dir.x = Input.get_action_strength("right") - Input.get_action_raw_strength("left")
 	move_dir.z = Input.get_action_strength("back") - Input.get_action_raw_strength("forward")
 	move_dir = move_dir.rotated(Vector3.UP, spring_arm.rotation.y).normalized()
-	velocity.x = move_dir.x * speed
-	velocity.z = move_dir.z * speed
+	velocity.x = lerp(velocity.x, move_dir.x * speed, lerp_val)
+	velocity.z = lerp(velocity.z, move_dir.z * speed, lerp_val)
 	if move_dir.z != 0 or move_dir.x != 0:
 		model.rotation.y = lerp_angle(model.rotation.y, atan2(velocity.x, velocity.z), lerp_val)
-		moving = true
 	else:
-		moving = false
-		
-	if moving:
-		animation_player.play("run_loop")
-	else:
-		animation_player.play("idle_loop")
+		velocity.x = lerp(velocity.x, 0.0, lerp_val)
+		velocity.z = lerp(velocity.z, 0.0, lerp_val)
+	animation_tree.set("parameters/BlendSpace1D/blend_position", velocity.length()/speed)
 
 func apply_gravity(delta):
 	velocity.y -= delta * gravity

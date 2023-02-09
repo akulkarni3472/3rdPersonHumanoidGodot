@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Material_001.material" type="Material" id=1]
 [ext_resource path="res://SpringArm.gd" type="Script" id=2]
@@ -476,12 +476,32 @@ tracks/17/keys = PoolRealArray( 0, 1, 0.839633, 1.03632, 0.0492278, -0.0541586, 
 radius = 0.913424
 height = 3.95775
 
+[sub_resource type="AnimationNodeAnimation" id=7]
+animation = "idle_loop"
+
+[sub_resource type="AnimationNodeAnimation" id=8]
+animation = "run_loop"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=9]
+blend_point_0/node = SubResource( 7 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 8 )
+blend_point_1/pos = 1.0
+min_space = 0.0
+
+[sub_resource type="AnimationNodeBlendTree" id=10]
+graph_offset = Vector2( -381.579, -191.667 )
+nodes/BlendSpace1D/node = SubResource( 9 )
+nodes/BlendSpace1D/position = Vector2( 160, 93.3333 )
+nodes/output/position = Vector2( 506.667, 226.667 )
+node_connections = [ "output", 0, "BlendSpace1D" ]
+
 [node name="SimpleHuman" type="KinematicBody"]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 script = ExtResource( 3 )
 
 [node name="Armature" type="Spatial" parent="."]
-transform = Transform( 2.16716, 0, 0, 0, 2.16716, 0, 0, 0, 2.16716, 0, 0, 0 )
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0 )
 
 [node name="Skeleton" type="Skeleton" parent="Armature"]
 bones/0/name = "Body"
@@ -593,13 +613,22 @@ anims/run_loop = SubResource( 5 )
 
 [node name="SpringArm" type="SpringArm" parent="SpringArmPivot"]
 transform = Transform( 1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 5, 0 )
-spring_length = 12.0
+spring_length = 7.0
 margin = 0.2
 script = ExtResource( 2 )
+mouse_sensitivity = 0.3
 
 [node name="Camera" type="Camera" parent="SpringArmPivot/SpringArm"]
+transform = Transform( 1, 0, 0, 0, 1, -2.98023e-08, 0, 0, 1, 0, 0, 0 )
+v_offset = 2.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 3.82137e-15, -3.82137e-15, 4.37114e-08, 1, 0, -1, 4.37114e-08, 0, 2.88729, 0 )
 visible = false
 shape = SubResource( 6 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 10 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/BlendSpace1D/blend_position = 0
